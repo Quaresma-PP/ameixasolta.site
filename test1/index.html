@@ -49,28 +49,42 @@
             left: 0;
             width: 100%;
             border: none;
-
-            /* ===== AJUSTE PARA ESCONDER A UI DO YOUTUBE ===== */
-            /* 1. Puxa o vídeo 60px para cima (esconde título/compartilhar) */
+            /* Puxa o vídeo 60px para cima (esconde título/compartilhar) */
             top: -60px;
-            /* 2. Aumenta a altura para compensar (100% + 60px de cima + 60px de baixo) */
+            /* Aumenta a altura para compensar (100% + 60px de cima + 60px de baixo) */
             height: calc(100% + 120px);
-            /* ================================================= */
+            /* Z-index 1: Fica no fundo */
+            z-index: 1;
+        }
+        
+        /* ===== NOVO: CAMADA DE BLOQUEIO DE PAUSE ===== */
+        #click-blocker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            /* Z-index 5: Fica acima do vídeo (1) */
+            z-index: 5; 
+            /* Começa escondida */
+            display: none; 
         }
 
-        /* Estilo da capa (overlay) - AGORA TRANSPARENTE */
+        /* Estilo da capa (overlay) */
         #video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: transparent; /* Fundo da tela inteira é transparente */
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             cursor: pointer;
+            /* Z-index 10: Fica acima de tudo (1 e 5) */
             z-index: 10;
             transition: opacity 0.3s ease;
         }
@@ -81,6 +95,11 @@
             pointer-events: none;
         }
 
+        /* Mostra o bloqueador quando a classe 'visible' for adicionada */
+        #click-blocker.visible {
+            display: block;
+        }
+        
         /* Estilo da CAIXA VERMELHA centralizada */
         .overlay-content {
             background-color: rgba(204, 0, 0, 0.9); /* Fundo vermelho */
@@ -96,23 +115,19 @@
         }
 
         .video-text-top {
-            font-size: 1.8rem; /* Ajustei o tamanho para caber melhor na caixa */
+            font-size: 1.8rem;
             font-weight: bold;
             margin: 0 0 15px 0;
         }
 
         .video-text-bottom {
-            font-size: 1.2rem; /* Ajustei o tamanho */
+            font-size: 1.2rem;
             font-weight: 500;
             margin: 15px 0 0 0;
         }
 
         /* Aplicando a animação ao contêiner do ícone */
         .play-icon-container {
-            /* A animação já está no .overlay-content, não precisa aqui
-               A menos que queira SÓ o ícone pulsando.
-               Vou manter no .overlay-content como estava no seu código original.
-            */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -140,32 +155,15 @@
         /* ======================================= */
 
         @media (max-width: 600px) {
-            /* 1. DEIXANDO O VÍDEO MAIS COMPRIDO (VERTICAL) */
             .video-container {
-                /* Proporção 9:16 (Vertical, estilo Stories/Reels) */
                 aspect-ratio: 9 / 16;
-                /* Garante que ele não passe da largura da tela */
                 max-width: 100%;
-                margin: 0; /* Ocupa a tela toda no mobile */
+                margin: 0;
             }
-
-            /* 2. AJUSTES DO TEXTO E ÍCONE PARA MOBILE */
-            .video-text-top {
-                font-size: 1.3rem;
-            }
-
-            .video-text-bottom {
-                font-size: 0.9rem;
-            }
-            
-            .overlay-content {
-                padding: 15px 20px;
-            }
-
-            .play-icon-container svg {
-                width: 50px;
-                height: 50px;
-            }
+            .video-text-top { font-size: 1.3rem; }
+            .video-text-bottom { font-size: 0.9rem; }
+            .overlay-content { padding: 15px 20px; }
+            .play-icon-container svg { width: 50px; height: 50px; }
         }
   </style>
 
@@ -238,6 +236,8 @@ currency: 'BRL'
     
 <div class="video-container">
         <div id="player"></div>
+
+        <div id="click-blocker"></div>
 
         <div id="video-overlay">
             <div class="overlay-content">
@@ -594,8 +594,10 @@ currency: 'BRL'
 </footer>
 
 <script>
-// 1. Variável global para o player
+// 1. Variáveis globais
         var player;
+        const overlay = document.getElementById('video-overlay');
+        const blocker = document.getElementById('click-blocker');
 
         // 2. Esta função é chamada automaticamente pela API do YouTube
         function onYouTubeIframeAPIReady() {
@@ -610,7 +612,9 @@ currency: 'BRL'
                     'showinfo': 0,        // Esconde informações do vídeo
                     'rel': 0,             // Não mostra vídeos relacionados no final
                     'modestbranding': 1,  // Minimiza o logo do YouTube
-                    'playsinline': 1      // Necessário para autoplay em iOS
+                    'playsinline': 1,     // Necessário para autoplay em iOS
+                    'loop': 1,            // Faz o vídeo repetir
+                    'playlist': 'iMgPmw_s6n0' // Necessário para 'loop' funcionar
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -618,30 +622,36 @@ currency: 'BRL'
             });
         }
 
-        // 3. A API chama esta função quando o vídeo está pronto
+        // 3. A API chama esta função quando o vídeo está pronto (ou atualizado)
         function onPlayerReady(event) {
-            // ===== AJUSTE PARA GARANTIR O ESTADO INICIAL =====
-            // Garante que a capa SEMPRE esteja visível no início/refresh
-            document.getElementById('video-overlay').classList.remove('hidden');
-            // =================================================
+            // ===== AJUSTE PARA GARANTIR O ESTADO INICIAL (F5) =====
+            // Garante que a capa SEMPRE esteja visível
+            overlay.classList.remove('hidden');
+            // Garante que o bloqueador de clique esteja ESCONDIDO
+            blocker.classList.remove('visible'); 
+            // ======================================================
 
-            // O vídeo já está tocando (mudo)
+            // Reinicia o vídeo
+            player.mute();
+            player.seekTo(0);
             event.target.playVideo();
         }
 
         // 4. Pega a capa e adiciona o clique
-        document.getElementById('video-overlay').addEventListener('click', function() {
-            // Tira o mudo
+        overlay.addEventListener('click', function() {
+            // Tira o mudo e começa do início
             player.unMute();
-            
-            // Toca o vídeo (garantia, caso tenha pausado)
+            player.seekTo(0);
             player.playVideo(); 
             
             // Esconde a capa
             this.classList.add('hidden');
+            // MOSTRA o bloqueador de cliques
+            blocker.classList.add('visible');
         });
 </script>
 
 </body>
 </html>
+
 

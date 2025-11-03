@@ -596,17 +596,20 @@ function onYouTubeIframeAPIReady() {
         height: '100%',
         width: '100%',
         
-        // SEU NOVO VÍDEO FOI COLOCADO AQUI:
-        videoId: 'iMgPmw_s6n0',
+        // Coloque o ID do seu vídeo AQUI. Ex: 'Yd_mya247M8'
+        videoId: 'SEU_VIDEO_ID_AQUI', // <--- SUBSTITUA AQUI PELO ID DO SEU VÍDEO
         
         playerVars: {
-            'autoplay': 1,       // Autoplay
-            'mute': 1,           // Começa mudo
-            'controls': 0,       // Esconde os controles do YouTube
-            'showinfo': 0,       // Esconde informações do vídeo
-            'rel': 0,            // Não mostra vídeos relacionados no final
-            'modestbranding': 1, // Minimiza o logo do YouTube
-            'playsinline': 1     // Necessário para autoplay em iOS
+            'autoplay': 1,       // 1. Começa automaticamente
+            'mute': 1,           // 2. Começa mudo
+            'controls': 0,       // 3. REMOVE OS CONTROLES (Play/Pause, Barra de Progresso, Volume)
+            'showinfo': 0,       // 4. REMOVE TÍTULO E NOME DO CANAL DO TOPO (legado, mas bom ter)
+            'rel': 0,            // 5. REMOVE VÍDEOS RELACIONADOS NO FINAL
+            'modestbranding': 1, // 6. Minimiza/quase REMOVE O LOGO DO YOUTUBE NO CANTO
+            'playsinline': 1,    // 7. Necessário para autoplay em iOS (e Android)
+            'iv_load_policy': 3, // 8. REMOVE ANOTAÇÕES (balões)
+            'disablekb': 1,      // 9. Desabilita controles de teclado (Espaço, setas)
+            'fs': 0              // 10. REMOVE O BOTÃO DE TELA CHEIA
         },
         events: {
             'onReady': onPlayerReady
@@ -616,7 +619,7 @@ function onYouTubeIframeAPIReady() {
 
 // 3. A API chama esta função quando o vídeo está pronto
 function onPlayerReady(event) {
-    // O vídeo já está tocando (mudo)
+    // Garante que o vídeo está tocando (mudo)
     event.target.playVideo();
 }
 
@@ -635,3 +638,4 @@ document.getElementById('video-overlay').addEventListener('click', function() {
 
 </body>
 </html>
+

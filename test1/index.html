@@ -24,141 +24,147 @@
     }
     body{ font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); }
 
- /* Torna o contêiner do vídeo responsivo */
-.video-container {
-    position: relative;
-    width: 100%;
-    max-width: 900px; /* Defina a largura máxima que desejar */
-    margin: 0 auto;
-    aspect-ratio: 16 / 9; /* Proporção de vídeo (16:9) */
-    overflow: hidden;
-    background-color: #000; /* Fundo padrão enquanto carrega a imagem */
-    
-    /* ADICIONADO: Estilos para a miniatura aparecer ANTES do vídeo carregar */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+ /* CSS Básico */
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-/* O iframe do vídeo deve preencher o contêiner, mas estará oculto inicialmente */
-#player,
-iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    opacity: 0; /* Começa invisível */
-    transition: opacity 0.5s ease-in-out; /* Transição suave */
-    pointer-events: none; /* Impede cliques no player invisível */
-}
+        /* Torna o contêiner do vídeo responsivo */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background-color: #000;
+            
+            /* Fundo com a miniatura do YouTube */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
 
-/* Quando o player estiver pronto, ele se torna visível */
-.video-ready #player {
-    opacity: 1;
-    pointer-events: auto; /* Permite cliques no player visível */
-}
+        /* O iframe do vídeo deve preencher o contêiner, mas estará oculto */
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0; /* Começa invisível */
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none; 
+        }
 
-/* Estilo da capa (overlay) */
-#video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent; /* Fundo transparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-    z-index: 10;
-    transition: opacity 0.3s ease;
-}
+        /* Quando o player estiver pronto, ele se torna visível */
+        .video-ready #player {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-/* Esconde a capa quando a classe 'hidden' for adicionada */
-#video-overlay.hidden {
-    opacity: 0;
-    pointer-events: none; /* Não captura mais cliques */
-}
+        /* Estilo da capa (overlay) */
+        #video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
 
-/* Conteúdo de texto e ícone (AGORA É A CAIXA VERMELHA PULSANTE) */
-.overlay-content {
-    background-color: rgba(204, 0, 0, 0.9); /* Fundo vermelho */
-    padding: 20px 30px;          /* Ajuste aqui para diminuir */
-    border-radius: 10px;
-    max-width: 300px;            /* Ajuste aqui para diminuir a largura máxima */
-    width: 85%;                  /* Responsivo */
-    text-align: center;
-    color: white;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    animation: pulse 2s infinite; /* O quadrado vermelho agora pulsa */
-}
+        /* Esconde a capa quando a classe 'hidden' for adicionada */
+        #video-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-.video-text-top {
-    font-size: 1.8rem; /* Ajuste de tamanho da fonte */
-    font-weight: bold;
-    margin: 0 0 15px 0;
-}
+        /* Caixa vermelha pulsante */
+        .overlay-content {
+            background-color: rgba(204, 0, 0, 0.9);
+            padding: 20px 30px;
+            border-radius: 10px;
+            max-width: 300px;
+            width: 85%;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
 
-.video-text-bottom {
-    font-size: 1.2rem; /* Ajuste de tamanho da fonte */
-    font-weight: 500;
-    margin: 15px 0 0 0;
-}
+        .video-text-top {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+        }
 
-/* O contêiner do ícone NÃO pulsa mais */
-.play-icon-container {
-    border-radius: 50%;
-}
+        .video-text-bottom {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 15px 0 0 0;
+        }
 
-/* Tamanho do ícone dentro da caixa */
-.play-icon-container svg {
-    width: 70px; /* Ajuste de tamanho do ícone */
-    height: 70px;
-}
+        .play-icon-container {
+            border-radius: 50%;
+        }
 
-/* Animação Pulsante */
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-    }
-    70% {
-        transform: scale(1.05); /* Um pouco menos agressivo para o quadrado inteiro */
-        box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); /* Tamanho do pulso */
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-    }
-}
+        .play-icon-container svg {
+            width: 70px;
+            height: 70px;
+        }
 
-/* ======================================= */
-/* REGRAS MOBILE (Já explicadas)           */
-/* ======================================= */
+        /* Animação Pulsante */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
 
-@media (max-width: 600px) {
-    .video-container {
-        aspect-ratio: 9 / 14; /* Proporção 9:16 para mobile */
-        max-width: 100%;
-    }
-    .video-text-top {
-        font-size: 1.3rem;
-    }
-    .video-text-bottom {
-        font-size: 0.9rem;
-    }
-    .play-icon-container svg {
-        width: 50px;
-        height: 50px;
-    }
-    .overlay-content {
-        padding: 15px 20px;
-    }
-}
+        /* Regras Mobile */
+        @media (max-width: 600px) {
+            .video-container {
+                aspect-ratio: 9 / 14; /* Vídeo vertical */
+                max-width: 100%;
+            }
+            .video-text-top {
+                font-size: 1.3rem;
+            }
+            .video-text-bottom {
+                font-size: 0.9rem;
+            }
+            .play-icon-container svg {
+                width: 50px;
+                height: 50px;
+            }
+            .overlay-content {
+                padding: 15px 20px;
+            }
+        }
   </style>
 
   <meta property="og:title" content="Aplicativo Ameixa - Alívio natural para Intestino preso" />
@@ -229,20 +235,23 @@ currency: 'BRL'
 
     
 <div class="video-container">
-    <div id="player"></div> <div id="video-overlay">
-        <div class="overlay-content">
-            <p class="video-text-top">Seu vídeo já começou</p>
-            <div class="play-icon-container">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="70px" height="70px">
-                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                </svg>
+        <div id="player"></div>
+
+        <div id="video-overlay">
+            <div class="overlay-content">
+                <p class="video-text-top">Seu vídeo já começou</p>
+                <div class="play-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="70px" height="70px">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    </svg>
+                </div>
+                <p class="video-text-bottom">Toque para ouvir</p>
             </div>
-            <p class="video-text-bottom">Toque para ouvir</p>
         </div>
     </div>
-</div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
     
     
     <!-- Mensagem abaixo do vídeo -->
@@ -584,69 +593,88 @@ currency: 'BRL'
 </footer>
 
 <script>
-// Variável global para o player e o ID do vídeo
-var player;
-var videoId = 'SEU_VIDEO_ID_AQUI'; // <--- SUBSTITUA AQUI PELO ID DO SEU VÍDEO (ex: 'Yd_mya247M8')
+// Variável global para o player
+        var player;
+        
+        // ==========================================================
+        // !! IMPORTANTE !!
+        // Coloque o ID do seu vídeo aqui. 
+        // Eu deixei o último que você mandou (Yd_mya247M8)
+        // ==========================================================
+        var videoId = 'Yd_mya247M8';
 
-// Função para obter a URL da miniatura do YouTube
-function getThumbnailUrl(id) {
-    // Retorna a miniatura de maior qualidade disponível
-    return 'https://img.youtube.com/vi/' + id + '/maxresdefault.jpg';
-    // Se 'maxresdefault' não carregar, tente 'hqdefault.jpg' ou 'sddefault.jpg'
-}
-
-// 1. Carrega a miniatura no fundo do container antes de tudo
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.video-container').style.backgroundImage = 'url(' + getThumbnailUrl(videoId) + ')';
-});
-
-// 2. Esta função é chamada automaticamente pela API do YouTube quando ela está pronta
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        videoId: videoId, 
-        playerVars: {
-            'autoplay': 1,       // O vídeo começa no mudo por baixo da capa/miniatura
-            'mute': 1,           // Mudo
-            'controls': 0,       // REMOVE TODOS OS CONTROLES DO YOUTUBE
-            'showinfo': 0,       // REMOVE TÍTULO E NOME DO CANAL
-            'rel': 0,            // REMOVE VÍDEOS RELACIONADOS NO FINAL
-            'modestbranding': 1, // MINIMIZA O LOGO DO YOUTUBE
-            'playsinline': 1,    // Necessário para autoplay em iOS
-            'iv_load_policy': 3, // REMOVE ANOTAÇÕES
-            'disablekb': 1,      // Desabilita controles de teclado
-            'fs': 0              // REMOVE O BOTÃO DE TELA CHEIA
-        },
-        events: {
-            'onReady': onPlayerReady
+        // Função para obter a URL da miniatura (usando hqdefault que é mais confiável)
+        function getThumbnailUrl(id) {
+            return 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
         }
-    });
-}
 
-// 3. A API chama esta função quando o vídeo está pronto
-function onPlayerReady(event) {
-    // Adiciona uma classe ao container para que o player apareça (transição suave)
-    document.querySelector('.video-container').classList.add('video-ready');
-    // Inicia o vídeo no mudo por baixo da capa (para contar como visualização)
-    event.target.playVideo();
-}
+        // 1. Carrega a miniatura no fundo do container assim que a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            var container = document.querySelector('.video-container');
+            if (container) {
+                container.style.backgroundImage = 'url(' + getThumbnailUrl(videoId) + ')';
+            } else {
+                console.error("Erro: .video-container não encontrado.");
+            }
+        });
 
-// 4. Pega a capa e adiciona o clique
-document.getElementById('video-overlay').addEventListener('click', function() {
-    // Tira o mudo
-    player.unMute();
-    
-    // Toca o vídeo (garantia, caso tenha pausado)
-    player.playVideo(); 
-    
-    // Esconde a capa vermelha (overlay)
-    this.classList.add('hidden');
-});
+        // 2. Esta função é chamada automaticamente pela API do YouTube
+        function onYouTubeIframeAPIReady() {
+            if (document.getElementById('player')) {
+                player = new YT.Player('player', {
+                    height: '100%',
+                    width: '100%',
+                    videoId: videoId, 
+                    playerVars: {
+                        'autoplay': 1,
+                        'mute': 1,
+                        'controls': 0,
+                        'showinfo': 0,
+                        'rel': 0,
+                        'modestbranding': 1,
+                        'playsinline': 1,
+                        'iv_load_policy': 3,
+                        'disablekb': 1,
+                        'fs': 0
+                    },
+                    events: {
+                        'onReady': onPlayerReady
+                    }
+                });
+            } else {
+                console.error("Erro: Elemento #player não encontrado para a API do YouTube.");
+            }
+        }
+
+        // 3. A API chama esta função quando o vídeo está pronto
+        function onPlayerReady(event) {
+            var container = document.querySelector('.video-container');
+            if (container) {
+                container.classList.add('video-ready');
+            }
+            event.target.playVideo();
+        }
+
+        // 4. Pega a capa e adiciona o clique
+        var overlay = document.getElementById('video-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                if (player && typeof player.unMute === 'function') {
+                    player.unMute();
+                    player.playVideo();
+                    this.classList.add('hidden');
+                } else {
+                    console.error("Erro: O player do YouTube não está pronto ou não foi encontrado.");
+                }
+            });
+        } else {
+            console.error("Erro: #video-overlay não encontrado.");
+        }
 </script>
 
 </body>
 </html>
+
 
 
 

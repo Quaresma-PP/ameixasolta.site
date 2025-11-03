@@ -24,142 +24,149 @@
     }
     body{ font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); }
 
-  /* Torna o contêiner do vídeo responsivo */
-.video-container {
-    position: relative;
-    width: 100%;
-    max-width: 900px; /* Defina a largura máxima que desejar */
-    margin: 0 auto;
-    aspect-ratio: 16 / 9; /* Proporção de vídeo (16:9) */
-    overflow: hidden;
-    background-color: #000;
-}
+  /* Estilo básico para remover margens */
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; /* Apenas para visualização */
+        }
 
-/* O iframe do vídeo deve preencher o contêiner */
-#player,
-iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
+        /* Torna o contêiner do vídeo responsivo */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px; /* Defina a largura máxima que desejar */
+            margin: 20px auto; /* Margem para centralizar e ver melhor */
+            aspect-ratio: 16 / 9; /* Proporção de vídeo (16:9) */
+            overflow: hidden; /* ESSENCIAL: Esconde as partes do iframe que vazam */
+            background-color: #000;
+        }
 
-/* Estilo da capa (overlay) - AGORA TRANSPARENTE */
-#video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent; /* Fundo da tela inteira é transparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-    z-index: 10;
-    transition: opacity 0.3s ease;
-}
+        /* O iframe do vídeo deve preencher o contêiner */
+        #player,
+        iframe {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            border: none;
 
-/* Esconde a capa quando a classe 'hidden' for adicionada */
-#video-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
+            /* ===== AJUSTE PARA ESCONDER A UI DO YOUTUBE ===== */
+            /* 1. Puxa o vídeo 60px para cima (esconde título/compartilhar) */
+            top: -60px;
+            /* 2. Aumenta a altura para compensar (100% + 60px de cima + 60px de baixo) */
+            height: calc(100% + 120px);
+            /* ================================================= */
+        }
 
-/* Estilo da CAIXA VERMELHA centralizada */
-.overlay-content {
-    background-color: rgba(204, 0, 0, 0.9); /* Fundo vermelho */
-    padding: 15px 25px;          /* Espaçamento interno */
-    border-radius: 10px;         /* Cantos arredondados */
-    max-width: 300px;            /* Largura máxima da caixa */
-    width: 85%;                  /* Responsivo em telas pequenas */
-    text-align: center;
-    color: white;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
-    /* AQUI VAI A ANIMAÇÃO DE PULSO AGORA */
-    animation: pulse 3s infinite; /* <-- Adicione ou mova esta linha para cá */
-}
+        /* Estilo da capa (overlay) - AGORA TRANSPARENTE */
+        #video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; /* Fundo da tela inteira é transparente */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
 
-.video-text-top {
-    font-size: 1.8rem; /* Ajustei o tamanho para caber melhor na caixa */
-    font-weight: bold;
-    margin: 0 0 15px 0;
-}
+        /* Esconde a capa quando a classe 'hidden' for adicionada */
+        #video-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-.video-text-bottom {
-    font-size: 1.2rem; /* Ajustei o tamanho */
-    font-weight: 500;
-    margin: 15px 0 0 0;
-}
+        /* Estilo da CAIXA VERMELHA centralizada */
+        .overlay-content {
+            background-color: rgba(204, 0, 0, 0.9); /* Fundo vermelho */
+            padding: 15px 25px; /* Espaçamento interno */
+            border-radius: 10px; /* Cantos arredondados */
+            max-width: 300px; /* Largura máxima da caixa */
+            width: 85%; /* Responsivo em telas pequenas */
+            text-align: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
+            animation: pulse 3s infinite; /* Adiciona a animação de pulso */
+        }
 
-/* Animação Pulsante */
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
-    }
-    70% {
-        transform: scale(1.1);
-        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0));
-    }
-    100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
-    }
-}
+        .video-text-top {
+            font-size: 1.8rem; /* Ajustei o tamanho para caber melhor na caixa */
+            font-weight: bold;
+            margin: 0 0 15px 0;
+        }
 
-/* Aplicando a animação ao contêiner do ícone */
-.play-icon-container {
-    animation: pulse 3s infinite;
-    /* Adicionado para garantir que o ícone fique centralizado */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .video-text-bottom {
+            font-size: 1.2rem; /* Ajustei o tamanho */
+            font-weight: 500;
+            margin: 15px 0 0 0;
+        }
+
+        /* Aplicando a animação ao contêiner do ícone */
+        .play-icon-container {
+            /* A animação já está no .overlay-content, não precisa aqui
+               A menos que queira SÓ o ícone pulsando.
+               Vou manter no .overlay-content como estava no seu código original.
+            */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Animação Pulsante */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+            }
+            70% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0));
+            }
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+            }
+        }
 
 
-/* ======================================= */
-/* AQUI COMEÇAM AS REGRAS MOBILE      */
-/* ======================================= */
+        /* ======================================= */
+        /* AQUI COMEÇAM AS REGRAS MOBILE */
+        /* ======================================= */
 
-@media (max-width: 600px) {
+        @media (max-width: 600px) {
+            /* 1. DEIXANDO O VÍDEO MAIS COMPRIDO (VERTICAL) */
+            .video-container {
+                /* Proporção 9:16 (Vertical, estilo Stories/Reels) */
+                aspect-ratio: 9 / 16;
+                /* Garante que ele não passe da largura da tela */
+                max-width: 100%;
+                margin: 0; /* Ocupa a tela toda no mobile */
+            }
 
-    /* * 1. DEIXANDO O VÍDEO MAIS COMPRIDO (VERTICAL)
-     * Aqui mudamos o .video-container para ter uma proporção 9:16 
-     */
-    .video-container {
-        /* Proporção 9:16 (Vertical, estilo Stories/Reels) */
-        aspect-ratio: 9 / 16;
-        
-        /* Opcional: Garante que ele não passe da largura da tela */
-        max-width: 100%;
-    }
+            /* 2. AJUSTES DO TEXTO E ÍCONE PARA MOBILE */
+            .video-text-top {
+                font-size: 1.3rem;
+            }
 
-    /* * 2. AJUSTES DO TEXTO E ÍCONE PARA MOBILE 
-     * (Regras que já tínhamos)
-     */
-    .video-text-top {
-        font-size: 1.3rem;
-    }
+            .video-text-bottom {
+                font-size: 0.9rem;
+            }
+            
+            .overlay-content {
+                padding: 15px 20px;
+            }
 
-    .video-text-bottom {
-        font-size: 0.9rem;
-    }
-    
-    .overlay-content {
-        padding: 15px 20px;
-    }
-
-    .play-icon-container svg {
-        width: 50px;
-        height: 50px;
-    }
-    
-}
+            .play-icon-container svg {
+                width: 50px;
+                height: 50px;
+            }
+        }
   </style>
 
   <meta property="og:title" content="Aplicativo Ameixa - Alívio natural para Intestino preso" />
@@ -230,22 +237,22 @@ currency: 'BRL'
 
     
 <div class="video-container">
-    <div id="player"></div>
+        <div id="player"></div>
 
-    <div id="video-overlay">
-        <div class="overlay-content">
-            <p class="video-text-top">Seu vídeo já começou</p>
-            <div class="play-icon-container">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="70px" height="70px">
-                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                </svg>
+        <div id="video-overlay">
+            <div class="overlay-content">
+                <p class="video-text-top">Seu vídeo já começou</p>
+                <div class="play-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="70px" height="70px">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    </svg>
+                </div>
+                <p class="video-text-bottom">Toque para ouvir</p>
             </div>
-            <p class="video-text-bottom">Toque para ouvir</p>
         </div>
     </div>
-</div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     
     
     <!-- Mensagem abaixo do vídeo -->
@@ -588,50 +595,53 @@ currency: 'BRL'
 
 <script>
 // 1. Variável global para o player
-var player;
+        var player;
 
-// 2. Esta função é chamada automaticamente pela API do YouTube quando ela está pronta
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        
-        // SEU NOVO VÍDEO FOI COLOCADO AQUI:
-        videoId: 'iMgPmw_s6n0',
-        
-        playerVars: {
-            'autoplay': 1,       // Autoplay
-            'mute': 1,           // Começa mudo
-            'controls': 0,       // Esconde os controles do YouTube
-            'showinfo': 0,       // Esconde informações do vídeo
-            'rel': 0,            // Não mostra vídeos relacionados no final
-            'modestbranding': 1, // Minimiza o logo do YouTube
-            'playsinline': 1     // Necessário para autoplay em iOS
-        },
-        events: {
-            'onReady': onPlayerReady
+        // 2. Esta função é chamada automaticamente pela API do YouTube
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: 'iMgPmw_s6n0', // ID do seu vídeo
+                playerVars: {
+                    'autoplay': 1,        // Autoplay
+                    'mute': 1,            // Começa mudo
+                    'controls': 0,        // Esconde os controles do YouTube
+                    'showinfo': 0,        // Esconde informações do vídeo
+                    'rel': 0,             // Não mostra vídeos relacionados no final
+                    'modestbranding': 1,  // Minimiza o logo do YouTube
+                    'playsinline': 1      // Necessário para autoplay em iOS
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
         }
-    });
-}
 
-// 3. A API chama esta função quando o vídeo está pronto
-function onPlayerReady(event) {
-    // O vídeo já está tocando (mudo)
-    event.target.playVideo();
-}
+        // 3. A API chama esta função quando o vídeo está pronto
+        function onPlayerReady(event) {
+            // ===== AJUSTE PARA GARANTIR O ESTADO INICIAL =====
+            // Garante que a capa SEMPRE esteja visível no início/refresh
+            document.getElementById('video-overlay').classList.remove('hidden');
+            // =================================================
 
-// 4. Pega a capa e adiciona o clique
-document.getElementById('video-overlay').addEventListener('click', function() {
-    // Tira o mudo
-    player.unMute();
-    
-    // Toca o vídeo (garantia, caso tenha pausado)
-    player.playVideo(); 
-    
-    // Esconde a capa
-    this.classList.add('hidden');
-});
+            // O vídeo já está tocando (mudo)
+            event.target.playVideo();
+        }
+
+        // 4. Pega a capa e adiciona o clique
+        document.getElementById('video-overlay').addEventListener('click', function() {
+            // Tira o mudo
+            player.unMute();
+            
+            // Toca o vídeo (garantia, caso tenha pausado)
+            player.playVideo(); 
+            
+            // Esconde a capa
+            this.classList.add('hidden');
+        });
 </script>
 
 </body>
 </html>
+
